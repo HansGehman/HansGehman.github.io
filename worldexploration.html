@@ -8,6 +8,13 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    
     <title>Hans Gehman World Exploration</title>
   </head>
   <body>
@@ -33,11 +40,968 @@
         </div>
       </nav>
 
-      <div class = "row justify-content-center">
-        <div class = "text-center m-4">
-          <h1 class = "display-1">World Exploration</h1>
+  </head>
+  <body style="background-color: black">
+    <!-- Styling for the markers -->
+    <style>
+      .marker {
+        background-image: url('./images/CAShield.png');
+        display: block;
+        border: none;
+        border-radius: 50%;
+        padding: 0;
+      }
+    </style>
+
+    <div class="row justify-content-center">
+      <div class="m-4"></div>
+      <div class="text-center m-4">
+        <h1 class="display-1 text-white">World Exploration</h1>
+      </div>
+      <div class="m-3"></div>
+      
+
+      <!-- Buttons -->
+      <div class="card border-0 rounded-0 rounded-top" style="width: 90vw; background-color: #2F4C6C;">
+        <div class="m-2"></div>
+        <div class="btn-light btn-group-sm rounded-1" >
+          <button type="button" class="btn m-1" id="albania">Albania</button>
+          <button type="button" class="btn m-1" id="belize">Belize</button>
+          <button type="button" class="btn m-1" id="canada">Canada</button>
+          <button type="button" class="btn m-1" id="costaRica">Costa Rica</button>
+          <button type="button" class="btn m-1" id="cyprus">Cyprus</button>
+          <button type="button" class="btn m-1" id="dRC">DRC</button>
+          <button type="button" class="btn m-1" id="ecuador">Ecuador</button>
+          <button type="button" class="btn m-1" id="egypt">Egypt</button>
+          <button type="button" class="btn m-1" id="elSalvador">El Salvador</button>
+          <button type="button" class="btn m-1" id="estonia">Estonia</button>
+          <button type="button" class="btn m-1" id="finland">Finland</button>
+          <button type="button" class="btn m-1" id="france">France</button>
+          <button type="button" class="btn m-1" id="germany">Germany</button>
+          <button type="button" class="btn m-1" id="greece">Greece</button>
+          <button type="button" class="btn m-1" id="guatemala">Guatemala <img src="./images/Tiger.jpg" width="18" class="rounded-1" /></button>
+          <button type="button" class="btn m-1" id="haiti">Haiti</button>
+          <button type="button" class="btn m-1" id="honduras">Honduras</button>
+          <button type="button" class="btn m-1" id="india">India</button>
+          <button type="button" class="btn m-1" id="ireland">Ireland</button>
+          <button type="button" class="btn m-1" id="israel">Israel <img src="./images/Tiger.jpg" width="18" class="rounded-1" /></button>
+          <button type="button" class="btn m-1" id="italy">Italy</button>
+          <button type="button" class="btn m-1" id="japan">Japan</button>
+          <button type="button" class="btn m-1" id="jordan">Jordan</button>
+          <button type="button" class="btn m-1" id="latvia">Latvia</button>
+          <button type="button" class="btn m-1" id="mexico">Mexico</button>
+          <button type="button" class="btn m-1" id="morocco">Morocco</button>
+          <button type="button" class="btn m-1" id="netherlands">Netherlands</button>
+          <button type="button" class="btn m-1" id="nicaragua">Nicaragua</button>
+          <button type="button" class="btn m-1" id="panama">Panama</button>
+          <button type="button" class="btn m-1" id="philippines">Philippines</button>
+          <button type="button" class="btn m-1" id="poland">Poland</button>
+          <button type="button" class="btn m-1" id="southKorea">South Korea <img src="./images/Tiger.jpg" width="18" class="rounded-1" /></button>
+          <button type="button" class="btn m-1" id="spain">Spain</button>
+          <button type="button" class="btn m-1" id="taiwan">Taiwan</button>
+          <button type="button" class="btn m-1" id="thailand">Thailand</button>
+          <button type="button" class="btn m-1" id="turkey">Turkey</button>
+          <button type="button" class="btn m-1" id="uAE">UAE</button>
+          <button type="button" class="btn m-1" id="uK">UK</button>
+          <button type="button" class="btn m-1" id="uSA">USA <img src="./images/Tiger.jpg" width="18" class="rounded-1" /></button>
+          <button type="button" class="btn m-1" id="vaticanCity">Vatican City</button>
         </div>
       </div>
+
+      <div id="map" style="width: 90vw; height: 70vh"></div>
+
+      <script>
+        mapboxgl.accessToken =
+          "pk.eyJ1IjoiY2FwdGFpbmZsdWZmIiwiYSI6ImNrbm05bW9obDBva3Qyb20wZHV2NGUwbHQifQ.jkQHN977Ux0xoNwTLaNHvw";
+
+        // Country coordinates
+        const albaniaCoordinates = [20.168331, 41.153332]
+        const belizeCoordinates = [-88.49765, 17.189877]
+        const canadaCoordinates = [-106.346771, 57.130366]
+        const costaRicaCoordinates = [-83.753428, 9.748917]
+        const cyprusCoordinates = [33.429859, 35.126413]
+        const dRCCoordinates = [21.758664, -4.038333]
+        const ecuadorCoordinates = [-78.183406, -1.831239]
+        const egyptCoordinates = [30.802498, 26.820553]
+        const elSalvadorCoordinates = [-88.89653, 13.794185]
+        const estoniaCoordinates = [25.013607, 58.595272]
+        const finlandCoordinates = [25.748151, 63.92411]
+        const franceCoordinates = [2.213749, 46.227638]
+        const germanyCoordinates = [10.451526, 51.165691]
+        const greeceCoordinates = [21.824312, 39.074208]
+        const guatemalaCoordinates = [-90.230759, 15.783471]
+        const haitiCoordinates = [-72.285215, 18.971187]
+        const hondurasCoordinates = [-86.541905, 14.499999]
+        const indiaCoordinates = [78.96288, 20.593684]
+        const irelandCoordinates = [-8.24389, 53.41291]
+        const israelCoordinates = [34.851612, 31.546051]
+        const italyCoordinates = [11.56738, 43.17194]
+        const japanCoordinates = [138.252924, 36.204824]
+        const jordanCoordinates = [36.238414, 31.385164]
+        const latviaCoordinates = [24.603189, 56.879635]
+        const mexicoCoordinates = [-102.552784, 23.634501]
+        const moroccoCoordinates = [-7.09262, 31.791702]
+        const netherlandsCoordinates = [5.291266, 52.132633]
+        const nicaraguaCoordinates = [-85.207229, 12.865416]
+        const panamaCoordinates = [-80.782127, 8.537981]
+        const philippinesCoordinates = [121.774017, 11.879721]
+        const polandCoordinates = [19.145136, 51.919438]
+        const southKoreaCoordinates = [127.766922, 36.507757]
+        const spainCoordinates = [-3.74922, 40.463667]
+        const taiwanCoordinates = [120.960515, 23.69781]
+        const thailandCoordinates = [100.992541, 14.870032]
+        const turkeyCoordinates = [35.243322, 38.963745]
+        const uAECoordinates = [53.847818, 24.024076]
+        const uKCoordinates = [-3.435973, 54.378051]
+        const uSACoordinates = [-95.712891, 38.09024]
+        const vaticanCityCoordinates = [12.453389, 41.903916]
+
+        // Geojson of country coordinates
+        const geojson = {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: albaniaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: belizeCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: canadaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: costaRicaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: cyprusCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: dRCCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: ecuadorCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: egyptCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: elSalvadorCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: estoniaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: finlandCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: franceCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: germanyCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: greeceCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: guatemalaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: haitiCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: hondurasCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: indiaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: irelandCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: israelCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: italyCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: japanCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: jordanCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: latviaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: mexicoCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: moroccoCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: netherlandsCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: nicaraguaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: panamaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: philippinesCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: polandCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: southKoreaCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: spainCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: taiwanCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: thailandCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: turkeyCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: uAECoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: uKCoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: uSACoordinates,
+              },
+            },
+            {
+              type: "Feature",
+              properties: {
+                iconSize: [40, 40],
+              },
+              geometry: {
+                type: "Point",
+                coordinates: vaticanCityCoordinates,
+              },
+            },
+          ],
+        };
+
+        const map = new mapboxgl.Map({
+          container: "map",
+          style: "mapbox://styles/mapbox/streets-v12", // style URL
+          center: [-89.4926, 40.5275], // starting position [lng, lat]
+          zoom: 1.6, // starting zoom
+        });
+
+        // Add markers to the map.
+        for (const marker of geojson.features) {
+          // Create a DOM element for each marker.
+          const el = document.createElement("div");
+          const width = marker.properties.iconSize[0];
+          const height = marker.properties.iconSize[1];
+          el.className = "marker";
+          el.style.width = `${width}px`;
+          el.style.height = `${height}px`;
+          el.style.backgroundSize = "100%";
+
+          // Add markers to the map.
+          new mapboxgl.Marker(el)
+            .setLngLat(marker.geometry.coordinates)
+            .addTo(map);
+        }
+
+        // Click buttons to fly to country location
+        document.getElementById("albania").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: albaniaCoordinates,
+              zoom: 6.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("belize").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: belizeCoordinates,
+              zoom: 7,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("canada").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: canadaCoordinates,
+              zoom: 3.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("costaRica").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: costaRicaCoordinates,
+              zoom: 7,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("cyprus").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: cyprusCoordinates,
+              zoom: 8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("dRC").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: dRCCoordinates,
+              zoom: 4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("ecuador").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: ecuadorCoordinates,
+              zoom: 5.8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("egypt").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: egyptCoordinates,
+              zoom: 5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("elSalvador").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: elSalvadorCoordinates,
+              zoom: 8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("estonia").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: estoniaCoordinates,
+              zoom: 6.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("finland").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: finlandCoordinates,
+              zoom: 4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("france").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: franceCoordinates,
+              zoom: 4.8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("germany").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: germanyCoordinates,
+              zoom: 4.9,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("greece").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: greeceCoordinates,
+              zoom: 5.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("guatemala").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: guatemalaCoordinates,
+              zoom: 6.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("haiti").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: haitiCoordinates,
+              zoom: 7.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("honduras").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: hondurasCoordinates,
+              zoom: 6.8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("india").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: indiaCoordinates,
+              zoom: 3.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("ireland").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: irelandCoordinates,
+              zoom: 5.8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("israel").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: israelCoordinates,
+              zoom: 6.2,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("italy").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: italyCoordinates,
+              zoom: 5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("japan").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: japanCoordinates,
+              zoom: 4.2,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("jordan").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: jordanCoordinates,
+              zoom: 6.2,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("latvia").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: latviaCoordinates,
+              zoom: 6.4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("mexico").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: mexicoCoordinates,
+              zoom: 4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("morocco").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: moroccoCoordinates,
+              zoom: 5.2,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("netherlands").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: netherlandsCoordinates,
+              zoom: 6.4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("nicaragua").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: nicaraguaCoordinates,
+              zoom: 6.4,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("panama").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: panamaCoordinates,
+              zoom: 7,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("philippines").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: philippinesCoordinates,
+              zoom: 4.8,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("poland").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: polandCoordinates,
+              zoom: 5.2,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("southKorea").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: southKoreaCoordinates,
+              zoom: 6,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("spain").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: spainCoordinates,
+              zoom: 5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("taiwan").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: taiwanCoordinates,
+              zoom: 6.6,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("thailand").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: thailandCoordinates,
+              zoom: 5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("turkey").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: turkeyCoordinates,
+              zoom: 5.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("uAE").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: uAECoordinates,
+              zoom: 6.5,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("uK").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: uKCoordinates,
+              zoom: 4.7,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("uSA").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: uSACoordinates,
+              zoom: 3.6,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+        document.getElementById("vaticanCity").addEventListener("click", () => {
+          map.flyTo({
+            ...{
+              center: vaticanCityCoordinates,
+              zoom: 15,
+            },
+            duration: 8000,
+            essential: true,
+          });
+        });
+      </script>
+
+    <div class="card border-0 rounded-0 rounded-bottom" style="width: 90vw; background-color: #2F4C6C;">
+      <div class="col-sm-3">
+        <div class="card text-center" >
+          <h6 class=""><img src="./images/Tiger.jpg" width="18" class="rounded-1" /> = a duration of a year+</h6>    
+        </div>
+      </div>
+      <div class="m-2"></div>
+    </div>
+    </div>
+    
+    
+    <div class="m-4"></div>
 
     
     <!-- Bootstrap Bundle with Popper -->
